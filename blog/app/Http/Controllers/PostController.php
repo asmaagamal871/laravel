@@ -41,4 +41,8 @@ class PostController extends Controller
         ];
         return view("post.show",["post"=>$post]);
     }
+
+    public function create(){
+        return view("post.create");
+    }
 }
