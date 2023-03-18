@@ -7,6 +7,8 @@
 @section('content')
     <div class="container">
     <div class="mb-3">
+        <form action="{{route('posts.store')}}"  method="post">
+        
   <label for="exampleFormControlInput1" class="form-label">title</label>
   <input type="text" class="form-control" id="exampleFormControlInput1" >
 </div>
@@ -19,6 +21,8 @@
   <input type="text" class="form-control" id="exampleFormControlInput1" >
 </div>
 <div class="col-auto">
-    <a href="{{route('posts.index')}}" type="submit" class="btn btn-primary mb-3">Create</a>
+    <button  type="submit" class="btn btn-primary mb-3">Create</button>
   </div>
+  </form>
+    </div>
   @endsection

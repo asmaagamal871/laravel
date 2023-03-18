@@ -45,4 +45,25 @@ class PostController extends Controller
     public function create(){
         return view("post.create");
     }
+
+    public function store(){
+
+        return redirect()->route('posts.index');
+    }
+
+    public function edit(){
+        $post= [
+            "id"=>3,
+            "title"=>"node Js",
+            "postedBy"=>"asmaa",
+            "createdAt"=>"2022-08-01 10:00:00"
+        ];
+        return view("post.edit",["post"=>$post]);
+    }
+
+    public function update(){
+
+        return redirect()->route('posts.index');
+    }
+
 }
