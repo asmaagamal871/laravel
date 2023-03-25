@@ -87,36 +87,27 @@ class PostController extends Controller
         
             $post = Post::findOrFail($id);
         
-            $title = request()->title;
-            $description = request()->description;
-            $postCreator = request()->postCreator;
-    
-            if ($post->title != $title) {
-                $post->title = $title;
+            if ($request->hasFile('image')) {
+                if ($post->image) {
+                    Storage::delete($post->image);
+                }
+                $image = $request->file('image');
+                $filename = $image->getClientOriginalName();
+                $path = Storage::putFileAs('public/posts', $image, $filename);
+                $post->image = $path;
             }
-            if ($post->description != $description) {
-                $post->description = $description;
-            }
-            if ($post->user_id != $postCreator) {
-                $post->user_id = $postCreator;
-            }
-if (request()->image) {
-    if ($post->image && Storage::exists($post->image)) {
-        Storage::delete($post->image);
-        // dd("deleted");
-    }
-    $path = Storage::putFileAs(
-        'public/posts',
-        $request->file('image'),
-        $request->file('image')->getClientOriginalName()
-    );
-    $post->image = $path;
-
-
-    $post->save();
-
-    return redirect()->route('posts.index');
-}
+        
+            $post->update([
+                'title' => $request->title,
+                'slug' => Str::slug($request->title),
+                'description' => $request->description,
+                'user_id' => $request->post_creator,
+            ]);
+        
+ 
+                $post->save();
+               
+        return redirect()->route('posts.index');
     }
 
     public function delete($id)
