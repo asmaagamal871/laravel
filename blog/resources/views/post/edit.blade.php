@@ -6,6 +6,15 @@
 
 
 <div class="container">
+  @if ($errors->any())
+  <div class="alert alert-danger">
+      <ul>
+          @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+          @endforeach
+      </ul>
+  </div>
+@endif
     <div class="mb-3">
         <form   method="post" action="{{route('posts.update',$post->id)}}" >
             @csrf
@@ -16,6 +25,11 @@
 <div class="mb-3">
   <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
   <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description">{{$post->description}}</textarea>
+</div>
+<div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">Image</label>
+  <input type="file" name="image" accept=".jpg,.png" class="form-control" >
+  
 </div>
 <div class="mb-3">
 <label for="exampleFormControlTextarea1" class="form-label">Post Creator</label>

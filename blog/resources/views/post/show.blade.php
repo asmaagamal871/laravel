@@ -11,6 +11,9 @@
   <div class="card-header">
     Post Info
   </div>
+  @if($post->image)
+            <img src="{{Storage::url($post->image)}}" width="250px"   alt="{{$post->image}}">
+        @endif
   <div class="card-body">
     <h5 class="card-title">Title:</h5>
     <p>{{$post['title']}}</p>
