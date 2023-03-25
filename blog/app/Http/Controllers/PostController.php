@@ -14,7 +14,6 @@ use App\jobs\PruneOldPostsJob;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\WhitespacePathNormalizer;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
-use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -82,62 +81,42 @@ class PostController extends Controller
 
     public function update(UpdatePostRequest $request, $id)
     {
-try {
-    $post = Post::findOrFail($id);
+    
+        // $post = Post::findOrFail($id);
 
-    if ($request->hasFile('image')) {
-        if ($post->image) {
-            Storage::delete($post->image);
-        }
-        $image = $request->file('image');
-        $filename = $image->getClientOriginalName();
-        $path = Storage::putFileAs('public/posts', $image, $filename);
-        $post->image = $path;
+        
+            $post = Post::findOrFail($id);
+        
+            $title = request()->title;
+            $description = request()->description;
+            $postCreator = request()->postCreator;
+    
+            if ($post->title != $title) {
+                $post->title = $title;
+            }
+            if ($post->description != $description) {
+                $post->description = $description;
+            }
+            if ($post->user_id != $postCreator) {
+                $post->user_id = $postCreator;
+            }
+if (request()->image) {
+    if ($post->image && Storage::exists($post->image)) {
+        Storage::delete($post->image);
+        // dd("deleted");
     }
-
-    $post->update([
-        'title' => $request->title,
-        'slug' => Str::slug($request->title),
-        'description' => $request->description,
-        'user_id' => $request->post_creator,
-    ]);
-
+    $path = Storage::putFileAs(
+        'public/posts',
+        $request->file('image'),
+        $request->file('image')->getClientOriginalName()
+    );
+    $post->image = $path;
 
 
+    $post->save();
 
-
-    // dd($post->image);
-    // if ($request->image) {
-        //     // dd($request->image);
-        //     // dd("hiiiii");
-        //     // if ($post->image) {
-        //     //     Storage::delete($post->image);
-        //     // }
-        //     $image = $request->file('image');
-        //     $filename = $image->getClientOriginalName();
-        //     $path = Storage::putFileAs('public/posts', $image, $filename);
-        //     $post->image = $path;
-    // }
-
-    // $title= $request->title;
-
-    // $description=$request->description;
-    // $postCreator=$request->post_creator;
-    // if ($post->title!=$title) {
-        //     $post->title=$title;
-    // }if ($post->description!=$description) {
-        //     $post->description=$description;
-    // }if ($post->user_id!=$postCreator) {
-        //     $post->user_id=$postCreator;
-    // }
-
-        $post->save();
-        return redirect()->route('posts.index');
-    } catch (\Exception $e) {
-        Log::error($e->getMessage());
-        return redirect()->back()
-            ->with('error', 'An error occurred while updating the item.');
-    }
+    return redirect()->route('posts.index');
+}
     }
 
     public function delete($id)

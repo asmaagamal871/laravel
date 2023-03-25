@@ -16,7 +16,7 @@
   </div>
 @endif
     <div class="mb-3">
-        <form   method="post" action="{{route('posts.update',$post->id)}}" >
+        <form   method="post" action="{{route('posts.update',$post->id)}}" enctype="multipart/form-data" >
             @csrf
         @method('PUT')
         <label for="exampleFormControlInput1" class="form-label">title</label>
