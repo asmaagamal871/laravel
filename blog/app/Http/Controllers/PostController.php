@@ -20,6 +20,7 @@ class PostController extends Controller
     public function index()
     {
         $allPosts= Post::paginate(10);
+        PruneOldPostsJob::dispatch();
         return view("post.index", ["posts"=>$allPosts]);
     }
 
@@ -49,7 +50,6 @@ class PostController extends Controller
             'post_creator' => ['required','exists:users,id'],
             'image'=> ['mimes:jpeg,png']
         ]);
-        // $image=request()->file('image')->store('public/storage');
 
 
 
@@ -82,7 +82,7 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, $id)
     {
     
-        // $post = Post::findOrFail($id);
+ 
 
         
             $post = Post::findOrFail($id);

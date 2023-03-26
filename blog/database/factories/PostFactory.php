@@ -25,7 +25,6 @@ class PostFactory extends Factory
             'title' =>fake()->title(),
             'description' =>fake()->text(),
             'user_id'=> User::all()->random()->id,
-
         ];
     }
 }
